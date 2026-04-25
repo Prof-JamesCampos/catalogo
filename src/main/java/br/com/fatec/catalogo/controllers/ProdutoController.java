@@ -16,9 +16,20 @@ public class ProdutoController {
     @Autowired
     private ProdutoService service;
 
+//    @GetMapping
+//    public String listar(Model model) {
+//        model.addAttribute("produtos", service.listarTodos());
+//        return "lista-produtos";
+//    }
+
+    // Resolve o Desafio 1
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("produtos", service.listarTodos());
+    public String listar(@RequestParam(value = "busca", required = false) String busca, Model model) {
+        if (busca != null && !busca.isBlank()) {
+            model.addAttribute("produtos", service.listarPorNome(busca));
+        } else {
+            model.addAttribute("produtos", service.listarTodos());
+        }
         return "lista-produtos";
     }
 

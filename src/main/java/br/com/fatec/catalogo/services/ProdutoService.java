@@ -17,14 +17,28 @@ public class ProdutoService {
 
         return repository.findAll();
     }
+    // Resolve o Desafio 1
+    public List<ProdutoModel> listarPorNome(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
+    }
 
     public ProdutoModel buscarPorId(long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
     }
 
+//    @Transactional
+//    public void salvar(ProdutoModel produto) {
+//        repository.save(produto);
+//    }
+
+    // Resolve o Desafio 2
     @Transactional
     public void salvar(ProdutoModel produto) {
+        // Regra: Não permitir duplicidade de nome em novos registros
+        if (produto.getIdProduto() == 0 && repository.existsByNome(produto.getNome())) {
+            throw new RuntimeException("Já existe um produto com este nome.");
+        }
         repository.save(produto);
     }
 

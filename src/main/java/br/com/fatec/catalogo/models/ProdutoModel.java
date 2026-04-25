@@ -1,10 +1,6 @@
 package br.com.fatec.catalogo.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -12,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TB_PRODUTO")
@@ -30,13 +27,51 @@ public class ProdutoModel implements Serializable {
     @Positive(message = "O valor deve ser um número positivo.")
     private BigDecimal valor;
 
-    // Construtores, Getters e Setters
-    public ProdutoModel() {}
+    //Resolve o Desafio 3
+    @Column(updatable = false)
+    private LocalDateTime dataCadastro;
 
-    public long getIdProduto() { return idProduto; }
-    public void setIdProduto(long idProduto) { this.idProduto = idProduto; }
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-    public BigDecimal getValor() { return valor; }
-    public void setValor(BigDecimal valor) { this.valor = valor; }
+    @PrePersist
+    protected void onCreate() {
+        this.dataCadastro = LocalDateTime.now();
+    }
+
+    // Getter e Setter para dataCadastro
+    public LocalDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    // Construtores, Getters e Setters
+    public ProdutoModel() {
+    }
+
+    public long getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(long idProduto) {
+        this.idProduto = idProduto;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
+    }
+
+
 }
