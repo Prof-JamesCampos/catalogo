@@ -19,6 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/categorias/**").hasRole("ADMIN")
                         .requestMatchers("/usuarios/**").hasRole("ADMIN") // Somente Admin cadastra novos usuários
                         .requestMatchers("/produtos").permitAll() // Público
                         .requestMatchers("/produtos/novo", "/produtos/editar/**", "/produtos/excluir/**").hasRole("ADMIN")

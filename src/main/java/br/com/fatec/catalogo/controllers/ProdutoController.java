@@ -1,6 +1,7 @@
 package br.com.fatec.catalogo.controllers;
 
 import br.com.fatec.catalogo.models.ProdutoModel;
+import br.com.fatec.catalogo.services.CategoriaService;
 import br.com.fatec.catalogo.services.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,41 @@ public class ProdutoController {
 //    }
 
     // Resolve o Desafio 1
+//    @GetMapping
+//    public String listar(@RequestParam(value = "busca", required = false) String busca, Model model) {
+//        if (busca != null && !busca.isBlank()) {
+//            model.addAttribute("produtos", service.listarPorNome(busca));
+//        } else {
+//            model.addAttribute("produtos", service.listarTodos());
+//        }
+//        return "lista-produtos";
+//    }
+
     @GetMapping
-    public String listar(@RequestParam(value = "busca", required = false) String busca, Model model) {
-        if (busca != null && !busca.isBlank()) {
-            model.addAttribute("produtos", service.listarPorNome(busca));
+    public String listar(@RequestParam(value = "nome", required = false) String nome,
+                         @RequestParam(value = "categoriaId", required = false) Long categoriaId,
+                         Model model) {
+
+        // 1. Lógica de Filtragem (Produtos)
+        if (nome != null && !nome.isBlank()) {
+            model.addAttribute("produtos", service.listarPorNome(nome));
+        } else if (categoriaId != null) {
+            model.addAttribute("produtos", service.listarPorCategoria(categoriaId));
         } else {
             model.addAttribute("produtos", service.listarTodos());
         }
+
+        // 2. O QUE ESTAVA FALTANDO: Carregar as categorias para o <select> do filtro
+        // Sem isso, o th:each="cat : ${categorias}" no HTML não encontra nada
+        model.addAttribute("categorias", categoriaService.listarTodas());
+
         return "lista-produtos";
     }
 
     @GetMapping("/novo")
     public String exibirFormulario(Model model) {
         model.addAttribute("produto", new ProdutoModel());
+        model.addAttribute("categorias", categoriaService.listarTodas()); // Garante que o select funcione
         return "cadastro-produto";
     }
 
@@ -60,4 +83,9 @@ public class ProdutoController {
         service.excluir(id);
         return "redirect:/produtos";
     }
+
+    @Autowired
+    private CategoriaService categoriaService;
+
+
 }

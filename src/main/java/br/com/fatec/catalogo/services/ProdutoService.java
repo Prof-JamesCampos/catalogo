@@ -27,6 +27,10 @@ public class ProdutoService {
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
     }
 
+    public List<ProdutoModel> listarPorCategoria(Long idCategoria) {
+        return repository.findByCategoriaIdCategoria(idCategoria);
+    }
+
 //    @Transactional
 //    public void salvar(ProdutoModel produto) {
 //        repository.save(produto);

@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "TB_PRODUTO")
 public class ProdutoModel implements Serializable {
@@ -26,6 +27,11 @@ public class ProdutoModel implements Serializable {
     @NotNull(message = "O valor é obrigatório.")
     @Positive(message = "O valor deve ser um número positivo.")
     private BigDecimal valor;
+
+    @NotNull(message = "A categoria é obrigatória")
+    @ManyToOne
+    @JoinColumn(name = "id_categoria_fk")
+    private CategoriaModel categoria;
 
     //Resolve o Desafio 3
     @Column(updatable = false)
@@ -71,6 +77,14 @@ public class ProdutoModel implements Serializable {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public CategoriaModel getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaModel categoria) {
+        this.categoria = categoria;
     }
 
 
